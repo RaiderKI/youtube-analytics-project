@@ -38,12 +38,9 @@ class Channel:
         """
         Выводит в консоль информацию о канале.
         """
-        print(self.channel)
+        channel = self.youtube.channels().list(id=self.channel_id, part='snippet,statistics').execute()
+        printj(channel)
 
-    @staticmethod
-    def printj(dict_to_print: dict) -> None:
-        """Выводит словарь в json-подобном удобном формате с отступами"""
-        print(json.dumps(dict_to_print, indent=2, ensure_ascii=False))
 
     @classmethod
     def get_service(cls):
@@ -63,6 +60,13 @@ class Channel:
         }
         with open(file_name, "w") as json_file:
             json.dump(channel_data, json_file)
+
+    def printj(dict_to_print: dict) -> None:
+        """Выводит словарь в json-подобном удобном формате с отступами"""
+        print(json.dumps(dict_to_print, indent=2, ensure_ascii=False))
+
+
+
 
     def __add__(self, other):
         """
