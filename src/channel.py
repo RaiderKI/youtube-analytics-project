@@ -18,16 +18,24 @@ class Channel:
         """
         Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API.
         """
-        self.channel_id = channel_id
-        self.channel = self.youtube.channels().list(id=self.channel_id, part='snippet,statistics').execute()
+        self._channel_id = channel_id
+        self.channel = self.youtube.channels().list(id=self._channel_id, part='snippet,statistics').execute()
         self.title = self.channel["items"][0]["snippet"]["title"]
         self.description = self.channel["items"][0]["snippet"]["description"]
-        self.url = f"https://www.youtube.com/channel/{self.channel_id}"
+        self.url = f"https://www.youtube.com/channel/{self._channel_id}"
         self.subscriberCount = self.channel["items"][0]["statistics"]["subscriberCount"]
         self.video_count = self.channel["items"][0]["statistics"]["videoCount"]
         self.viewCount = self.channel["items"][0]["statistics"]["viewCount"]
 
-    def __str__(self):
+
+    @property
+    def channel_id(self) -> str:
+        """
+        Getter для атрибута 'channel_id'
+        """
+        return self._channel_id
+
+    def str(self):
         """
         Возвращает название канала и ссылку на него.
         """
@@ -38,8 +46,8 @@ class Channel:
         """
         Выводит в консоль информацию о канале.
         """
-        channel = self.youtube.channels().list(id=self.channel_id, part='snippet,statistics').execute()
-        printj(channel)
+        channel = self.youtube.channels().list(id=self._channel_id, part='snippet,statistics').execute()
+        print_json(channel)
 
 
     @classmethod
@@ -61,10 +69,9 @@ class Channel:
         with open(file_name, "w") as json_file:
             json.dump(channel_data, json_file)
 
-    def printj(dict_to_print: dict) -> None:
+    def print_json(dict_to_print: dict) -> None:
         """Выводит словарь в json-подобном удобном формате с отступами"""
         print(json.dumps(dict_to_print, indent=2, ensure_ascii=False))
-
 
 
 
